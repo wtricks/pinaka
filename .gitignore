@@ -1,0 +1,56 @@
+# Node.js and PNPM
+node_modules/
+.pnpm-store/
+pnpm-lock.yaml
+
+# Build output
+dist/
+dist-ssr/
+build/
+
+# Vite cache
+.vite/
+
+# ESLint and Prettier
+.eslintcache
+.prettierignore
+
+# Editor and IDE files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.sw?
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.local
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Testing and coverage
+coverage/
+*.lcov
+
+# Miscellaneous
+*.bak
+*.tmp
