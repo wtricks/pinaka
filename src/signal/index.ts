@@ -1,4 +1,12 @@
-import { def, falsy, isBool, isEqual, isFunction, values } from '../helper';
+import {
+  def,
+  falsy,
+  isBool,
+  isEqual,
+  isFunction,
+  scheduler,
+  values,
+} from '../helper';
 import type {
   Cleanup,
   Getter,
@@ -145,9 +153,7 @@ export const untrackSignal = <T>(signalGetter: Getter<T>): T => {
 /**
  * Run a function after completing all microTasks of current queue.
  */
-const __PROMISE = isFunction(queueMicrotask)
-  ? queueMicrotask
-  : Promise.resolve().then;
+const __PROMISE = scheduler();
 
 const __DEEP_FLUSH = 3,
   __HOLDER: { [key: number]: SignalDep } = {};

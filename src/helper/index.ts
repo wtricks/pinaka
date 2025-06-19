@@ -1,4 +1,9 @@
 /**
+ * A unique id.
+ */
+export const UIID = Symbol();
+
+/**
  * Sets a property on an object with the specified key and value.
  * @param o - The object to which the property will be added.
  * @param key - The key for the new property.
@@ -67,3 +72,57 @@ export const isEqual = (a: unknown, b: unknown): boolean => {
  * @returns An array of the object's values.
  */
 export const values = <T>(o: { [key: string]: T }): T[] => Object.values(o);
+
+/**
+ * Check if given value is typeof `Object`
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
+ */
+export const isObject = (v: unknown) =>
+  v !== null && typeof v === 'object' && !isArray(v);
+
+/**
+ * Check if given value is typeof `Array`
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+ */
+export const isArray = Array.isArray;
+
+/**
+ * An empty freezed Array
+ */
+export const emptyArray = Object.freeze([]);
+
+/**
+ * An empty freezed Object
+ */
+export const emptyObject = Object.freeze({});
+
+/**
+ * Call each function from the array of functions.
+ * @param functionArray A collection of functions.
+ */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+export const runAll = (functionArray: (Function | unknown)[]) => {
+  let runnableFunction;
+
+  for (runnableFunction of functionArray) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    isFunction(runnableFunction) && runnableFunction();
+  }
+};
+
+/**
+ * Will be used for batch process
+ */
+export const scheduler = () => {
+  return isFunction(queueMicrotask) ? queueMicrotask : Promise.resolve().then;
+};
+
+/**
+ * Mark component to be used as built in component.
+ * @param fn Function to be marked as built in component
+ */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+export const makeItBuiltInComponent = (fn: Function): Function => {
+  (fn as unknown as { [UIID]: boolean })[UIID] = true;
+  return fn;
+};
