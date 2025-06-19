@@ -24,8 +24,7 @@
   "exports": {
     ".": {
       "import": "./dist/pinaka.es.js",
-      "require": "./dist/pinaka.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/pinaka.umd.js"
     }
   },
   "files": [
