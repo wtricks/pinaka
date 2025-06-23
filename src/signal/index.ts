@@ -33,7 +33,9 @@ export const createSignal = <T>(
 ): Signal<T> => {
   if (__DEV__ && !isBool(equals) && !isFunction(equals)) {
     throw new TypeError(
-      'Second parameter of `createSignal()` must be boolean value or a function which evaluate to boolean value.'
+      'Second parameter of `' +
+        createSignal.name +
+        '()` must be boolean value or a function which evaluate to boolean value.'
     );
   }
 
@@ -83,13 +85,15 @@ export const observeSignal = <T>(
 ): ObserveResult<T> => {
   if (__DEV__ && !isFunction(fn)) {
     throw new Error(
-      'Second parameter of `observeSignal()` must be a function.'
+      'Second parameter of `' + observeSignal.name + '()` must be a function.'
     );
   }
 
   if (__DEV__ && dummyFn !== undefined && !isFunction(fn)) {
     throw new Error(
-      'Third parameter of `observeSignal()` is optional, but if used it must be a function.'
+      'Third parameter of `' +
+        observeSignal.name +
+        '()` is optional, but if used it must be a function.'
     );
   }
 
@@ -133,7 +137,9 @@ export const observeSignal = <T>(
  */
 export const untrackSignal = <T>(signalGetter: Getter<T>): T => {
   if (__DEV__ && !isFunction(signalGetter)) {
-    throw new Error('First parameter of `untrackSignal()` must be a function.');
+    throw new Error(
+      'First parameter of `' + untrackSignal.name + '()` must be a function.'
+    );
   }
 
   if (!__TRACK_SUBS) {
@@ -246,7 +252,7 @@ const helperFn = (DEP: SignalDep) => {
 export const withoutBatch = (fn: Function): void => {
   if (__DEV__ && !isFunction(fn)) {
     throw new TypeError(
-      'First parameter of `withoutBatch()` must be a function.'
+      'First parameter of `' + withoutBatch.name + '()` must be a function.'
     );
   }
 
