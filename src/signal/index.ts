@@ -77,11 +77,13 @@ export const createSignal = <T>(
  * @param dummyFn An optional function to trigger the tracking of the `signal`.
  *                When provided, the changes are reacted based on the signal used inside 'dummyFn',
  *                otherwise, it reacts on the basis of 'signalUpdate' itself.
+ * @param dep An optional array of cleanup functions, which will be called when the `signal` is disposed.
  * @returns The result of the `dummyFn` or `signalUpdate` function.
  */
 export const observeSignal = <T>(
   fn: ObserveFn<T>,
-  dummyFn?: ObserveFn<T>
+  dummyFn?: ObserveFn<T>,
+  dep?: ObserveFn<void>[]
 ): ObserveResult<T> => {
   if (__DEV__ && !isFunction(fn)) {
     throw new Error(
@@ -122,6 +124,10 @@ export const observeSignal = <T>(
       delete arr[0][arr[1]];
     }
   };
+
+  if (dep) {
+    dep.push(cleanupFn);
+  }
 
   return [value, cleanupFn];
 };
