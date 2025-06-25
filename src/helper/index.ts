@@ -19,6 +19,11 @@ export const __SPACE__ = uniqueSymbol();
 export const __COMPONENT_PREFIX = 'pinaka-';
 
 /**
+ * An empty object.
+ */
+export const VOID0 = void 0;
+
+/**
  * Sets a property on an object with the specified key and value.
  * @param o - The object to which the property will be added.
  * @param key - The key for the new property.

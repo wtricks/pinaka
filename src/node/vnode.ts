@@ -1,15 +1,32 @@
 import {
   __CASE__,
   __COMPONENT_PREFIX,
+  __DESTROY__,
+  __SPACE__,
   def,
   emptyArray,
   emptyObject,
+  isArray,
   isFunction,
   isObject,
   isString,
   UIID,
+  VOID0,
 } from '../helper';
-import type { Component, VNode, VNodeCase } from '../types';
+import type {
+  Component,
+  ErrorStack,
+  ObserveFn,
+  TextNode,
+  VNode,
+  VNodeCase,
+} from '../types';
+import {
+  createElement,
+  createExpression,
+  createTextNode,
+  insertElement,
+} from './dom';
 
 const __GLOBAL_COMPONENTS: Record<string, Component<object, object>> = {};
 
@@ -104,4 +121,90 @@ export const createNode = <T extends object, P extends object>(
   }
 
   return node as VNode<T, P>;
+};
+
+export const generateDOMViaVNodes = <T extends object, P extends object>(
+  parent: HTMLElement | SVGElement,
+  vnode: VNode<T, P>['c'],
+  space?: TextNode,
+  dep?: ObserveFn<void>[],
+  holder?: TextNode[],
+  stack?: ErrorStack
+): TextNode | void => {
+  if (!vnode) {
+    return;
+  }
+
+  let currentElement: TextNode | void | HTMLElement | SVGElement = VOID0;
+
+  if (isArray(vnode)) {
+    let vnodeSingle: VNode | void;
+    let nextElement: TextNode | void;
+
+    for (vnodeSingle of vnode) {
+      nextElement = generateDOMViaVNodes(
+        parent,
+        vnodeSingle,
+        space,
+        dep,
+        holder,
+        stack
+      );
+      space = (
+        nextElement
+          ? __SPACE__ in nextElement
+            ? (nextElement as unknown as { [__SPACE__]: () => void })[
+                __SPACE__
+              ]()
+            : nextElement
+          : VOID0
+      ) as TextNode;
+    }
+
+    return space;
+  }
+
+  if (isFunction(vnode)) {
+    // for dynamic expressions
+    currentElement = createExpression(vnode as ObserveFn<string>, dep!);
+  } else if (!(UIID in (vnode as unknown as Component<object, object>))) {
+    // for static text
+    currentElement = createTextNode(vnode + '') as TextNode;
+  } else if (isFunction((vnode as VNode<object, object>).t)) {
+    // for components
+  } else {
+    currentElement = createElement(
+      (vnode as VNode<object, object>).t as string
+    );
+    generateDOMViaVNodes(
+      currentElement as HTMLElement,
+      (vnode as VNode<object, object>).c,
+      undefined,
+      dep,
+      undefined,
+      stack
+    );
+  }
+
+  if (holder) {
+    holder.push(currentElement as TextNode);
+  } else if (
+    __SPACE__ in (currentElement as unknown as { [__DESTROY__]: () => void })
+  ) {
+    dep!.push(
+      (currentElement as unknown as { [__DESTROY__]: () => void })[__DESTROY__]
+    );
+  }
+
+  if (
+    !(__SPACE__ in (currentElement as unknown as { [__DESTROY__]: () => void }))
+  ) {
+    insertElement(
+      parent,
+      currentElement as HTMLElement,
+      space as unknown as Element
+    );
+  }
+
+  return space ? (currentElement as TextNode) : VOID0;
 };

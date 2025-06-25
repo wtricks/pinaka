@@ -1,6 +1,6 @@
 import { isFunction } from '../helper';
 import { observeSignal } from '../signal';
-import type { ObserveFn } from '../types';
+import type { ObserveFn, TextNode } from '../types';
 
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 
@@ -139,7 +139,7 @@ export const createTextNode = (text: string = '') => {
 export const createExpression = (
   expression: ObserveFn<string>,
   dep: ObserveFn<void>[]
-) => {
+): TextNode => {
   // eslint-disable-next-line prefer-const
   let space = createTextNode('p'),
     oldvalue: string;
@@ -155,5 +155,5 @@ export const createExpression = (
     dep
   );
 
-  return space;
+  return space as TextNode;
 };
