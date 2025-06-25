@@ -1,7 +1,22 @@
 /**
- * A unique id.
+ * Creates a unique symbol.
+ * @returns A unique symbol.
  */
-export const UIID = Symbol();
+export const uniqueSymbol = () => Symbol();
+
+/**
+ * Unique symbols used for internal purposes.
+ */
+export const UIID = uniqueSymbol();
+export const __CASE__ = uniqueSymbol();
+export const __DESTROY__ = uniqueSymbol();
+export const __UPDATE__ = uniqueSymbol();
+export const __SPACE__ = uniqueSymbol();
+
+/**
+ * The prefix used for component names.
+ */
+export const __COMPONENT_PREFIX = 'pinaka-';
 
 /**
  * Sets a property on an object with the specified key and value.

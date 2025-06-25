@@ -1,11 +1,11 @@
-import { def, isFunction } from '../helper';
+import { def, isFunction, UIID } from '../helper';
 import type { ObserveFn } from '../types';
 
-const __EFFECTS: ObserveFn<unknown>[] & { $: boolean } = def(
+const __EFFECTS: ObserveFn<unknown>[] & { [UIID]: boolean } = def(
   [],
-  '$',
+  UIID,
   false
-) as ObserveFn<unknown>[] & { $: boolean };
+) as ObserveFn<unknown>[] & { [UIID]: boolean };
 
 /**
  * Create a reactive effect.
@@ -23,7 +23,7 @@ export const createEffect = <T>(fn: ObserveFn<T>) => {
   }
 
   // Must be called inside the component
-  if (__DEV__ && !__EFFECTS.$) {
+  if (__DEV__ && !__EFFECTS[UIID]) {
     throw new Error(
       '`' + createEffect.name + '()` must be called inside the component.'
     );

@@ -1,4 +1,6 @@
 import { isFunction } from '../helper';
+import { observeSignal } from '../signal';
+import type { ObserveFn } from '../types';
 
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 
@@ -121,4 +123,37 @@ export const removeElement = (element: Element, parent?: Element) => {
  */
 export const createTextNode = (text: string = '') => {
   return document.createTextNode(text);
+};
+
+/**
+ * Creates a new text node that evaluates the given expression and sets the text
+ * content of the node to the result. The expression is evaluated whenever any
+ * signal it depends on is updated.
+ *
+ * @param expression The expression to evaluate. If null or undefined, an empty
+ * text node is created.
+ * @param dep An array of dependents that are updated whenever the expression is
+ * evaluated.
+ * @returns The created text node.
+ */
+export const createExpression = (
+  expression: ObserveFn<string>,
+  dep: ObserveFn<void>[]
+) => {
+  // eslint-disable-next-line prefer-const
+  let space = createTextNode('p'),
+    oldvalue: string;
+
+  observeSignal(
+    () => {
+      oldvalue = expression();
+      if (space.nodeValue != oldvalue) {
+        space.data = oldvalue;
+      }
+    },
+    undefined,
+    dep
+  );
+
+  return space;
 };
