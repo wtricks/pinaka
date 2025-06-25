@@ -35,9 +35,10 @@ export const def = <T>(
   o: object,
   key: PropertyKey,
   value: T,
-  writable: boolean = false
+  writable: boolean = false,
+  enumerable: boolean = false
 ) => {
-  return Object.defineProperty(o, key, { value, enumerable: false, writable });
+  return Object.defineProperty(o, key, { value, enumerable, writable });
 };
 
 /**
