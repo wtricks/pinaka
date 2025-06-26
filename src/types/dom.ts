@@ -32,3 +32,22 @@ export type ErrorStack = {
   parent: ErrorStack;
   name: string;
 };
+
+export type ClassName = string | string[] | Record<string, boolean>;
+
+export type StyleProp = string | Record<string, string | number>;
+
+export type Directive<V, T extends HTMLElement> = [
+  fn: string | DirectiveFn<V, T>,
+  value: unknown,
+  args: string[],
+];
+
+export interface DirectiveFn<V, T extends HTMLElement | SVGElement> {
+  (element: T, value: V, ...args: string[]): DirectiveResult<V>;
+}
+
+export type DirectiveResult<V> = {
+  update: (newvalue: V) => void;
+  destroy: (element: HTMLElement | SVGElement) => void;
+};
