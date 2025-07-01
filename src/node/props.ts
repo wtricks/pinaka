@@ -1,4 +1,5 @@
 import {
+  def,
   emptyArray,
   emptyObject,
   isArray,
@@ -172,4 +173,31 @@ export const resolveClassProp = (
     undefined,
     dep
   );
+};
+
+/**
+ * Builds properties for a component by iterating over the provided props
+ * and setting them on the provided store object.
+ *
+ * For any key that is not 'ref' and does not start with 'on' followed by an
+ * uppercase letter, the value is set on the store object using the `def`
+ * utility.
+ *
+ * @param store - The object to set the component properties on.
+ * @param props - The object containing the properties to set.
+ * @returns The modified store object.
+ */
+export const buildPropsForComponent = (
+  store: Record<string, unknown>,
+  props: Record<string, unknown>
+) => {
+  let key;
+
+  for (key in props) {
+    if (key == 'ref' || /^on[A-Z]/.test(key)) {
+      store[key] = props[key];
+    } else {
+      def(store, key, props[key], false, true);
+    }
+  }
 };

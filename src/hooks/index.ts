@@ -1,7 +1,7 @@
 import { def, isFunction, UIID } from '../helper';
 import type { ObserveFn } from '../types';
 
-const __EFFECTS: ObserveFn<unknown>[] & { [UIID]: boolean } = def(
+export const __EFFECTS: ObserveFn<unknown>[] & { [UIID]: boolean } = def(
   [],
   UIID,
   false

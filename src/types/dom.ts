@@ -2,11 +2,11 @@ import type { __DESTROY__, __SPACE__, __UPDATE__, UIID } from '../helper';
 import type { ObserveFn } from './signal';
 
 export type Component<T extends object, P extends object = object> = (
-  props: T
+  props: P
 ) => VNode<T, P> & { [UIID]: true };
 
 export type VNode<T extends object = object, P extends object = object> = {
-  t: string | Component<T, P>;
+  t: string | Component<T, P> | { AII: boolean }; // 'AII' means no observe signals in props for component
   p: P;
   c:
     | VNode
@@ -29,7 +29,7 @@ export type TextNode = Text & {
 
 export type ErrorStack = {
   children: ErrorStack[];
-  parent: ErrorStack;
+  parent?: ErrorStack;
   name: string;
 };
 
@@ -50,4 +50,10 @@ export interface DirectiveFn<V, T extends HTMLElement | SVGElement> {
 export type DirectiveResult<V> = {
   update: (newvalue: V) => void;
   destroy: (element: HTMLElement | SVGElement) => void;
+};
+
+export type ReturnObject = {
+  [__UPDATE__]: () => void;
+  [__SPACE__]: () => void;
+  [__DESTROY__]: (remove: boolean) => void;
 };

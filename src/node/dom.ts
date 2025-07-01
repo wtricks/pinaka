@@ -1,4 +1,4 @@
-import { isFunction } from '../helper';
+import { __DESTROY__, isFunction, runAll } from '../helper';
 import { observeSignal } from '../signal';
 import type { ObserveFn, TextNode } from '../types';
 
@@ -156,4 +156,33 @@ export const createExpression = (
   );
 
   return space as TextNode;
+};
+
+/**
+ * Destroys the nodes and runs the associated cleanup functions stored in the
+ * given holder array. The holder array is also cleared after calling this
+ * function.
+ *
+ * @param parent The parent element of the nodes to destroy.
+ * @param holder The holder array containing the nodes to destroy and their
+ * associated cleanup functions.
+ */
+export const destroyNodes = (
+  parent: Element,
+  holder: [TextNode[], ObserveFn<void>[]]
+) => {
+  runAll(holder[1]);
+
+  let element;
+  for (element of holder[0]) {
+    if (__DESTROY__ in element) {
+      (element as unknown as { [__DESTROY__]: (remove: boolean) => void })[
+        __DESTROY__
+      ](true);
+    } else {
+      removeElement(element as unknown as Element, parent);
+    }
+  }
+
+  holder[0].length = holder[1].length = 0;
 };

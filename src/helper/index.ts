@@ -1,3 +1,5 @@
+import type { createComponent } from '../node/component';
+
 /**
  * Creates a unique symbol.
  * @returns A unique symbol.
@@ -143,7 +145,9 @@ export const scheduler = () => {
  * @param fn Function to be marked as built in component
  */
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-export const makeItBuiltInComponent = (fn: Function): Function => {
+export const makeItBuiltInComponent = (
+  fn: Function
+): typeof createComponent => {
   (fn as unknown as { [UIID]: boolean })[UIID] = true;
-  return fn;
+  return fn as typeof createComponent;
 };
